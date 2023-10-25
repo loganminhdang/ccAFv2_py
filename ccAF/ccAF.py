@@ -27,15 +27,18 @@ import numpy as np
 import pandas as pd
 import os
 from scipy.sparse import isspmatrix
-import pickle
 import scanpy as sc
+sc.settings.verbosity = 0
 
-# ccAFv2
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-import numpy as np
+# Stop warning messages for cudart
+import logging
+logging.disable(logging.WARNING)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = "3"
+logging.getLogger('tensorflow').disabled = True
+
+# Neural network
 import tensorflow as tf
 from tensorflow import keras
-from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 
 ################
@@ -45,17 +48,17 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 #genes = list(pd.read_csv('ccAFv2_genes_full_dataset_101023.csv', index_col=0, header=0)['0'])
 #classes = list(pd.read_csv('ccAFv2_classes_full_dataset_101023.txt',header=None)[0])
 with path('ccAF', 'ccAFv2_full_dataset_101023.h5') as inPath:
-    classifier = keras.models.load_model(inPath)
+    _classifier = keras.models.load_model(inPath)
 with path('ccAF', 'ccAFv2_genes_full_dataset_101023.csv') as inPath:
-    genes = list(pd.read_csv(inPath, index_col=0, header=0)['0'])
+    _genes = list(pd.read_csv(inPath, index_col=0, header=0)['0'])
 with path('ccAF', 'ccAFv2_classes_full_dataset_101023.txt') as inPath:
-    classes = list(pd.read_csv(inPath, header=None)[0])
+    _classes = list(pd.read_csv(inPath, header=None)[0])
 
 
 ###############
 ## Functions ##
 ###############
-def scale(df1):
+def _scale(df1):
     """
     scale takes in a pandas dataframe and applies scales the values into Z-scores across rows.
 
@@ -72,7 +75,7 @@ def scale(df1):
     return (df1.subtract(df1.mean(axis=1),axis=0)).div(df1.std(axis=1),axis=0)
 
 # Prepare test data for predicting
-def prep_predict_data(data, genes):
+def _prep_predict_data(data, genes):
     """
     prep_predict_data takes in a pandas dataframe and the trained ccAFv2 model.
 
@@ -95,12 +98,11 @@ def prep_predict_data(data, genes):
     # Restrict to classifier genes
     data2 = data[:,list(set(genes).intersection(data.var_names))]
     # Scale data
-    scaler = StandardScaler()
     if isspmatrix(data.X):
         data2 = pd.DataFrame(data2.X.todense(), index = data2.obs_names, columns = data2.var_names)
     else:
         data2 = pd.DataFrame(data2.X, index = data2.obs_names, columns = data2.var_names)
-    data3 = pd.DataFrame(scale(data2), index = data2.index, columns = data2.columns)
+    data3 = pd.DataFrame(_scale(data2), index = data2.index, columns = data2.columns)
     # Add minimum values for missing genes
     missing = set(genes).difference(data3.columns)
     if len(missing)>0:
@@ -110,7 +112,7 @@ def prep_predict_data(data, genes):
         return data3
 
 # Predict labels with rejection
-def predict_labels(new_data, classifier=classifier, genes=genes, classes=classes, cutoff=0.5):
+def predict_labels(new_data, classifier=_classifier, genes=_genes, classes=_classes, cutoff=0.5):
     """
     predict_new_data takes in a pandas dataframe and the trained ccAFv2 model.
 
@@ -127,14 +129,14 @@ def predict_labels(new_data, classifier=classifier, genes=genes, classes=classes
         Series of labels for each single cell.
 
     """
-    pred_data = prep_predict_data(new_data, genes)
-    probabilities = predict_new_data(pred_data, classifier)
+    pred_data = _prep_predict_data(new_data, genes)
+    probabilities = _predict_new_data(pred_data, classifier)
     labels = np.array([classes[np.argmax(i)] for i in probabilities])
     labels[np.where([np.max(i) < cutoff for i in probabilities])] = np.nan
     return labels, probabilities
 
 # Predict ccAFv2 labels for new data
-def predict_new_data(new_data, classifier):
+def _predict_new_data(new_data, classifier):
     """
     predict_new_data takes in a pandas dataframe and the trained ccAFv2 model.
 

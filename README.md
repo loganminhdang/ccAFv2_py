@@ -1,4 +1,4 @@
-# ccAFv2:  cell cycle ASU-Fred Hutch neural network based scRNA-seq cell cycle classifier
+# ccAF Version 2:  cell cycle ASU-Fred Hutch neural network based scRNA-seq cell cycle classifier
 The ability to accurately assign a cell cycle phase based on a transcriptome profile has many potential uses in single cell studies and beyond. The cell cycle classifier is based on a keras/TensorFlow multilayer perceptron artificial neural network (MLP-ANN).
 
 ## Dependencies
@@ -13,21 +13,21 @@ There are four dependencies that must be met for ccAF to classify cell cycle sta
 > **NOTE!**  pip may need to be replaced with pip3 depending upon your setup.
 
 ```shell
-pip3 install numpy scipy scanpy tensorflow keras
+pip install numpy scipy scanpy tensorflow keras
 ```
 
 ## Installation of ccAF classifier
 The ccAF classifier can be installed with the following command:
 
 ```shell
-pip install ccAFv2
+pip install ccAF
 ```
 
 ## Alternatively use the ccAF Docker container
 We facilitate the use of ccAF by providing a Docker Hub container [cplaisier/ccafv2](https://hub.docker.com/r/cplaisier/ccafv2) which has all the dependencies and libraries required to run the ccAF classifier. To see how the Docker container is configured plaese refer to the [Dockerfile](https://github.com/plaisier-lab/docker_ccafv2/blob/master/Dockerfile). Please [install Docker](https://docs.docker.com/get-docker/) and then from the command line run:
 
 ```shell
-docker pull cplaisier/ccafv2
+docker pull cplaisier/ccaf
 ```
 
 Then run the Docker container using the following command (replace <path to scRNA-seq profiles directory> with the directory where you have the scRNA-seq data to be classified):
@@ -42,17 +42,18 @@ This will start the Docker container in interactive mode and will leave you at a
 The data input into ccAF must use human Ensembl gene IDs (ENSG<#>), whithout the version number. If your data is not currenly labeled with Ensemble gene IDs you may try [mygene](https://docs.mygene.info/projects/mygene-py/en/latest/) or go to the [BioMart](http://uswest.ensembl.org/biomart/martview).
   
 ## Running ccAF against your scRNA-seq data
-The first step in using ccAF is to import your scRNA-seq profiling data into scanpy. A scanpy data object is the expected input into the ccAF classifier:
+The first step in using ccAF is to import your scRNA-seq profiling data into scanpy. A scanpy data object is the expected input into the ccAF classifier. The test dataset can be downloaded from figshare: [BT324_GSC.h5ad](https://figshare.com/ndownloader/files/42902338)
+
 
 ```python
 import scanpy as sc
-from ccAFv2 import classifier
+from ccAF
 
 # Load WT U5 hNSC data used to train classifier as a loom file
 set1_scanpy = sc.read_h5ad('data/BT324_GSC.h5ad')
 
 # Predict cell cycle phase labels
-predictedLabels = classifier.predict_labels(set1_scanpy)
+predictedLabels = ccAF.predict_labels(set1_scanpy)
 ```
 
 More complete example is available as [test.py](https://github.com/plaisier-lab/ccAFv2/blob/master/tests/test.py) on the GitHub page.

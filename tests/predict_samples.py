@@ -22,9 +22,6 @@
 ##########################################
 
 # General
-import numpy as np
-import pandas as pd
-import os
 import scanpy as sc
 import ccAF
 
