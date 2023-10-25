@@ -1,2 +1,65 @@
-# ccAFv2_py
- Python package for ccAFv2
+# ccAFv2:  cell cycle ASU-Fred Hutch neural network based scRNA-seq cell cycle classifier
+The ability to accurately assign a cell cycle phase based on a transcriptome profile has many potential uses in single cell studies and beyond. The cell cycle classifier is based on a keras/TensorFlow multilayer perceptron artificial neural network (MLP-ANN).
+
+## Dependencies
+There are four dependencies that must be met for ccAF to classify cell cycle states:
+1. [numpy](https://numpy.org/) - ([install](https://numpy.org/install/))
+2. [scipy](https://www.scipy.org/index.html) - ([install](https://www.scipy.org/install.html))
+3. [scanpy](https://scanpy.readthedocs.io/en/latest/) - ([install](https://scanpy.readthedocs.io/en/latest/installation.html))
+4. [tensorflow](https://www.tensorflow.org/) - ([install](https://www.tensorflow.org/install))
+5. [keras](https://keras.io/) - ([install](https://keras.io/getting_started/))
+
+*Python dependency installation commands:*
+> **NOTE!**  pip may need to be replaced with pip3 depending upon your setup.
+
+```shell
+pip3 install numpy scipy scanpy tensorflow keras
+```
+
+## Installation of ccAF classifier
+The ccAF classifier can be installed with the following command:
+
+```shell
+pip install ccAFv2
+```
+
+## Alternatively use the ccAF Docker container
+We facilitate the use of ccAF by providing a Docker Hub container [cplaisier/ccafv2](https://hub.docker.com/r/cplaisier/ccafv2) which has all the dependencies and libraries required to run the ccAF classifier. To see how the Docker container is configured plaese refer to the [Dockerfile](https://github.com/plaisier-lab/docker_ccafv2/blob/master/Dockerfile). Please [install Docker](https://docs.docker.com/get-docker/) and then from the command line run:
+
+```shell
+docker pull cplaisier/ccafv2
+```
+
+Then run the Docker container using the following command (replace <path to scRNA-seq profiles directory> with the directory where you have the scRNA-seq data to be classified):
+
+```shell
+docker run -it -v '<path to scRNA-seq profiles directory>:/files' cplaisier/ccafv2
+```
+
+This will start the Docker container in interactive mode and will leave you at a command prompt. You will then want to change directory to where you have your scRNA-seq or trasncriptome profiling data.
+
+## Gene labels must be in human Gene Ensembl IDs to run ccAF
+The data input into ccAF must use human Ensembl gene IDs (ENSG<#>), whithout the version number. If your data is not currenly labeled with Ensemble gene IDs you may try [mygene](https://docs.mygene.info/projects/mygene-py/en/latest/) or go to the [BioMart](http://uswest.ensembl.org/biomart/martview).
+  
+## Running ccAF against your scRNA-seq data
+The first step in using ccAF is to import your scRNA-seq profiling data into scanpy. A scanpy data object is the expected input into the ccAF classifier:
+
+```python
+import scanpy as sc
+from ccAFv2 import classifier
+
+# Load WT U5 hNSC data used to train classifier as a loom file
+set1_scanpy = sc.read_h5ad('data/BT324_GSC.h5ad')
+
+# Predict cell cycle phase labels
+predictedLabels = classifier.predict_labels(set1_scanpy)
+```
+
+More complete example is available as [test.py](https://github.com/plaisier-lab/ccAFv2/blob/master/tests/test.py) on the GitHub page.
+
+## Contact
+For issues or comments please contact:  [Chris Plaisier](mailto:plaisier@asu.edu)
+
+## Citation
+[Neural G0: a quiescent-like state found in neuroepithelial-derived cells and glioma.](https://doi.org/10.1101/446344) Samantha A. O'Connor, Heather M. Feldman, Chad M. Toledo, Sonali Arora, Pia Hoellerbauer, Philip Corrin, Lucas Carter, Megan Kufeld, Hamid Bolouri, Ryan Basom, Jeffrey Delrow, Jose L. McFaline-Figueroa, Cole Trapnell, Steven M. Pollard, Anoop Patel, Patrick J. Paddison, Christopher L. Plaisier. bioRxiv 446344; doi: [https://doi.org/10.1101/446344](https://doi.org/10.1101/446344)
+

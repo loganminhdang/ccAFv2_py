@@ -1,0 +1,4 @@
+include ccAF/ccAFv2_full_dataset_101023.h5
+include ccAF/ccAFv2_genes_full_dataset_101023.csv
+include ccAF/ccAFv2_classes_full_dataset_101023.txt
+include README.md
