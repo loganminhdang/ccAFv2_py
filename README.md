@@ -72,7 +72,7 @@ It is expected that the input for the ccAFv2 classifier will be a scanpy AnnData
 ### Test data
 
 The human neural stem cells (hNSCs) from a human fetus 8 weeks post-conception (PCW8) [(Zeng et al., 2023)](https://pubmed-ncbi-nlm-nih-gov.ezproxy1.lib.asu.edu/37192616/) is available for use as a testing dataset:
-- [PCW8 hNSCs rds file](https://zenodo.org/records/10968634/files/W8-1_normalized_ensembl.h5ad?download=1)
+- [PCW8 hNSCs h5ad file](https://zenodo.org/records/10968634/files/W8-1_normalized_ensembl.h5ad?download=1)
 
 Download this file and place it into the directory in which you wish to run the ccAFv2 tutorial below. This data has been QC'd and normalized using SCTransform in Seurat following our best practices [here](https://github.com/plaisier-lab/ccafv2_R/blob/main/README.md#input-for-classification).
 
@@ -87,7 +87,7 @@ import scanpy as sc
 import ccAFv2
 
 # Load up test dataset
-PCW8 = sc.read_h5ad('../data/W8-1_normalized_ensembl.h5ad')
+PCW8 = sc.read_h5ad('W8-1_normalized_ensembl.h5ad')
 
 # Run ccAFv2 to predict cell labels
 PCW8_labels = ccAFv2.predict_labels(PCW8, species='human', gene_id='ensembl')
