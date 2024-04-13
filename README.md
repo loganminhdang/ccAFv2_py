@@ -180,6 +180,7 @@ In the figures folder you will find the PDF 'umapccAFv2_UMAP_PCW8.pdf'. Below is
 ## Maintainers
 
 For issues or comments please contact:  [Chris Plaisier](mailto:plaisier@asu.edu)
+
 And for other great packages from the Plaisier Lab please check here:  [@plaisier-lab](https://github.com/plaisier-lab).
 
 ## Contributing
