@@ -28,12 +28,12 @@ long_description = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="ccAF",
+    name="ccAFv2",
     version="2.0.0",
     description="Classify scRNA-seq profiling with highly resolved cell cycle phases.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/plaisier-lab/ccAF_py",
+    url="https://github.com/plaisier-lab/ccAFv2_py",
     author="Christopher Plaisier",
     author_email="plaisier@asu.edu",
     license="GNU General Public License v3.0",
@@ -45,7 +45,7 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     #py_modules = ['ccAF'],
-    packages = ['ccAF'],
+    packages = ['ccAFv2'],
     include_package_data=True,
-    install_requires=["importlib-resources", "numpy", "scipy", "pandas", "tensorflow", "keras"],
+    install_requires=["importlib-resources", "numpy", "scipy", "pandas"], #, "tensorflow", "keras"],
 )
