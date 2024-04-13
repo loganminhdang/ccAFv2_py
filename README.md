@@ -67,15 +67,14 @@ This will start the Docker container in interactive mode and will leave you at a
 
 ### Input for classification
 
-It is expected that the input for the ccAFv2 classifier will be a Seurat object that has been thorougly quality controlled. We provide an example of our quality control pipeline in can be found [here](https://github.com/plaisier-lab/ccAFv2/blob/main/scripts/02_scQC_2024.R). Is is preferred that the data in the Seurat object be SCTransformed, however, the standard approach for normalization only applies to the highly variable genes. This can exclude genes needed for the
-accurate classification of the cell cycle. For this reason the ccAFv2 PredictCellCycle function used to classify cell cycle states runs the SCTransform function again parameterized so that it will retain all genes captured in the dataset.
+It is expected that the input for the ccAFv2 classifier will be a scanpy AnnData object that has been thorougly quality controlled. Is is preferred that the data in the object be SCTransformed, however, the standard approach for normalization only applies to the highly variable genes. This can exclude genes needed for the accurate classification of the cell cycle. During the running of the ccAFv2 classifier it will tell you how many genes overlap with the classifier marker genes.
 
 ### Test data
 
-The U5 human neural stem cell (hNSC) dataset used to train the ccAFv2 is available for testing purposes here:
-- [U5 hNSCs rds file](https://zenodo.org/records/10961633/files/U5_normalized_ensembl.rds?download=1)
+The human neural stem cells (hNSCs) from a human fetus 8 weeks post-conception (PCW8) [(Zeng et al., 2023)](https://pubmed-ncbi-nlm-nih-gov.ezproxy1.lib.asu.edu/37192616/) is available for use as a testing dataset:
+- [PCW8 hNSCs rds file](https://zenodo.org/records/10968634/files/W8-1_normalized_ensembl.h5ad?download=1)
 
-Download this file and place it into the directory in which you wish to run the ccAFv2 tutorial below. This data has been QC'd and normalized using SCTransform following our best practices described above.
+Download this file and place it into the directory in which you wish to run the ccAFv2 tutorial below. This data has been QC'd and normalized using SCTransform in Seurat following our best practices [here](https://github.com/plaisier-lab/ccafv2_R/blob/main/README.md#input-for-classification).
 
 ### Cell cycle classification
 
@@ -92,9 +91,6 @@ PCW8 = sc.read_h5ad('../data/W8-1_normalized_ensembl.h5ad')
 
 # Run ccAFv2 to predict cell labels
 PCW8_labels = ccAFv2.predict_labels(PCW8, species='human', gene_id='ensembl')
-
-# Save into scanpy object
-PCW8.obs['ccAFv2'] = pd.Categorical(PCW8_labels[0], categories=['Neural G0', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
 ```
 When the classifier is running it should look something like this:
 
@@ -126,7 +122,7 @@ ccAFv2.predict_labels(scanpy_obj,
 
 ### Cell cycle classification results
 
-The results of the cell cycle classification is stored in the seurat object metadata. The likelihoods for each cell cycle state can be found with the labels of each cell cycle state ('Neural.G0', 'G1', 'Late.G1', 'S', 'S.G2', 'G2.M', and 'M.Early.G1') and the classification for each cell can be found int the 'ccAFv2'. Here are the first 10 rows of the U5-hNSC predictions:
+The results of the cell cycle classification ares stored in the first element of the 'ccAFv2.predict_labels' output, and the likelihoods are stored in the second element.
 
 ```python
 PCW8_labels
@@ -151,13 +147,20 @@ Which returns the following:
         1.86515393e-07, 9.99996066e-01, 2.80967629e-06]], dtype=float32))
 ```
 
+In the code Below we demonstrate how the classifications can be added to the metadata. After adding the column to the .obs metadata, the classification for each cell would then found in the column 'ccAFv2', and is a categorical variable which helps with plotting.
+
+```python
+# Save into scanpy object
+PCW8.obs['ccAFv2'] = pd.Categorical(PCW8_labels[0], categories=['Neural G0', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
+```
+
 ### Plotting cell cycle states
 
 We provide plotting functions that colorize the cell cycle states in the way used in our manuscripts. We strongly suggest using these functions when plotting if possible.
 
 #### Plotting a UMAP with cell cycle states
 
-Plotting cells using ther first two dimensions from a dimensionality reduction method (e.g., PCA, tSNE, or UMAP) is a common way to represent single cell or nuclei RNA-seq data. We have an overloaded DimPlot function that colorizes the cells based on their called cell cycle state. The function accepts all the parameters that DimPlot can accept, except for group.by and cols. Here is how the plotting function should be run:
+Plotting cells using ther first two dimensions from a dimensionality reduction method (e.g., PCA, tSNE, or UMAP) is a common way to represent single cell or nuclei RNA-seq data. Below we provide code to plot the cells colorized based on their called cell cycle state.
 
 ```r
 # Run UMAP of U5 hNSCs
