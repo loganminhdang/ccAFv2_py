@@ -1,7 +1,7 @@
 # ccAFv2: Cell cycle classifier for Python and scanpy
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-This repository is for the Python package for the cell cycle classifier ccAFv2. The input for the ccAFv2 classifier is single cell or nuclei, or spatial RNA-seq data.  The features of this classifier are that it classifies six cell cycle states (G1, Late G1, S, S/G2, G2/M, and M/Early G1) and a quiescent-like G0 state, and it incorporates a tunable parameter to filter out less certain classifications. This package is implemented in Python so that it can be used in [scanpy](https://scanpy.readthedocs.io/en/stable/) analysis workflows. We provide examples of how to install, run ccAFv2 on scanpy objects (sc/snRNA-seq), and plot and use results.
+This repository is for the Python package for the cell cycle classifier ccAFv2. The input for the ccAFv2 classifier is single cell, nuclei, or spatial RNA-seq data.  The features of this classifier are that it classifies six cell cycle states (G1, Late G1, S, S/G2, G2/M, and M/Early G1) and a quiescent-like G0 state, and it incorporates a tunable parameter to filter out less certain classifications. This package is implemented in Python so that it can be used in [scanpy](https://scanpy.readthedocs.io/en/stable/) analysis workflows. We provide examples of how to install, run ccAFv2 on scanpy objects (sc/snRNA-seq), and plot and use results.
 
 ## Table of Contents
 
@@ -49,7 +49,7 @@ pip install ccAFv2
 
 #### Docker image
 
-We facilitate the use of ccAFv2 by providing a Docker Hub container [cplaisier/ccafv2](https://hub.docker.com/r/cplaisier/ccafv2) which has all the dependencies and libraries required to run the ccAF classifier. To see how the Docker container is configured plaese refer to the [Dockerfile](https://github.com/plaisier-lab/docker_ccafv2/blob/master/Dockerfile). Please [install Docker](https://docs.docker.com/get-docker/) and then from the command line run:
+We facilitate the use of ccAFv2 by providing a Docker Hub container [cplaisier/ccafv2](https://hub.docker.com/r/cplaisier/ccafv2) which has all the dependencies and libraries required to run the ccAFv2 classifier. To see how the Docker container is configured plaese refer to the [Dockerfile](https://github.com/plaisier-lab/docker_ccafv2/blob/master/Dockerfile). Please [install Docker](https://docs.docker.com/get-docker/) and then from the command line run:
 
 ```sh
 docker pull cplaisier/ccafv2_py
@@ -67,7 +67,7 @@ This will start the Docker container in interactive mode and will leave you at a
 
 ### Input for classification
 
-It is expected that the input for the ccAFv2 classifier will be a scanpy AnnData object that has been thorougly quality controlled. Is is preferred that the data in the object be SCTransformed, however, the standard approach for normalization only applies to the highly variable genes. This can exclude genes needed for the accurate classification of the cell cycle. During the running of the ccAFv2 classifier it will tell you how many genes overlap with the classifier marker genes.
+It is expected that the input for the ccAFv2 classifier will be a scanpy AnnData object that has been thorougly quality controlled. Is is preferred that the data in the object be SCTransformed; however, the standard approach for normalization only applies to the highly variable genes. This can exclude genes needed for the accurate classification of the cell cycle. During the running of the ccAFv2 classifier it will tell you how many genes overlap with the classifier marker genes.
 
 ### Test data
 
@@ -104,25 +104,24 @@ Running ccAFv2:
 Done.
 ```
 
-It is important to look at how many marker genes were present in the dataset. We found that when less than 689 marker genes (or 80%) were found in the dataset that this led significantly less accurate predictions. And some of the later values for the timing and 93/93 may differ for your dataset, which is perfectly fine.
+It is important to look at how many marker genes were present in the dataset. We found that when less than 689 marker genes (or 80%) were found in the dataset that this led significantly less accurate predictions.
 
 There are several options that can be passed to the PredictCellCycle function:
 
 ```python
 ccAFv2.predict_labels(scanpy_obj,
-                      cutoff=0.5, 
+                      cutoff=0.5,
                       species='human',
-                      gene_id='ensembl') 
+                      gene_id='ensembl')
 ```
 - **scanpy_obj**: a scanpy object must be supplied to classify, no default
-- **cutoff**: the value used to threchold the likelihoods, default is 0.5
-- **assay**: which seurat_obj assay to use for classification, helpful if data is prenormalized, default is 'SCT'
+- **cutoff**: the value used to threshold the likelihoods, default is 0.5
 - **species**: from which species did the samples originate, either 'human' or 'mouse', defaults to 'human'
 - **gene_id**: what type of gene ID is used, either 'ensembl' or 'symbol', defaults to 'ensembl'
 
 ### Cell cycle classification results
 
-The results of the cell cycle classification ares stored in the first element of the 'ccAFv2.predict_labels' output, and the likelihoods are stored in the second element.
+The results of the cell cycle classification are stored in the first element of the 'ccAFv2.predict_labels' output, and the likelihoods are stored in the second element.
 
 ```python
 PCW8_labels
@@ -199,3 +198,4 @@ Feel free to dive in! [Open an issue](https://github.com/plaisier-lab/ccAFv2_R/i
 2. **Citation for ccAF (version 1)**:
 
 [Neural G0: a quiescent-like state found in neuroepithelial-derived cells and glioma.](https://doi.org/10.1101/446344) Samantha A. O'Connor, Heather M. Feldman, Chad M. Toledo, Sonali Arora, Pia Hoellerbauer, Philip Corrin, Lucas Carter, Megan Kufeld, Hamid Bolouri, Ryan Basom, Jeffrey Delrow, Jose L. McFaline-Figueroa, Cole Trapnell, Steven M. Pollard, Anoop Patel, Patrick J. Paddison, Christopher L. Plaisier. bioRxiv 446344; doi: [https://doi.org/10.1101/446344](https://doi.org/10.1101/446344)
+
