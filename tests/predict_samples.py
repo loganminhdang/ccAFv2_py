@@ -31,14 +31,6 @@ import ccAFv2
 ## Test prediction ##
 #####################
 
-U5hNSC = sc.read_h5ad('../data/U5_normalized_ensembl_all_genes.h5ad')
-
-U5hNSC_labels = ccAFv2.predict_labels(U5hNSC, species='human', gene_id='ensembl')
-
-# Save into scanpy object
-U5hNSC.obs['ccAFv2'] = pd.Categorical(U5hNSC_labels[0], categories=['Neural G0', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
-
-
 # Load up test dataset
 PCW8 = sc.read_h5ad('../data/W8-1_normalized_ensembl.h5ad')
 
