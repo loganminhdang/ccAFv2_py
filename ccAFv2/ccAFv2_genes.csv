@@ -1,4 +1,4 @@
-,human_ensembl,human_symbol,mouse_ensembl,mouse_symbol,Neural G0,G1,Late G1,S,S/G2,G2/M,M/Early G1
+,human_ensembl,human_symbol,mouse_ensembl,mouse_symbol,qG0,G1,Late G1,S,S/G2,G2/M,M/Early G1
 0,ENSG00000132718,SYT11,ENSMUSG00000068923,Syt11,1,0,0,0,0,0,0
 1,ENSG00000152253,SPC25,ENSMUSG00000005233,Spc25,0,0,0,0,1,1,0
 2,ENSG00000105202,FBL,ENSMUSG00000046865,Fbl,0,0,0,0,1,0,0
