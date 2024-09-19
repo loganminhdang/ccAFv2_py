@@ -29,7 +29,7 @@ long_description = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="ccAFv2",
-    version="2.0.4",
+    version="2.0.5",
     description="Classify scRNA-seq profiling with highly resolved cell cycle phases.",
     long_description=long_description,
     long_description_content_type="text/markdown",

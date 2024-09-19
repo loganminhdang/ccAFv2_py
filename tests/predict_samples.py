@@ -17,6 +17,8 @@
 ## mention who built it. Thanks. :-)                    ##
 ##########################################################
 
+# docker run -it -v '/home/cplaisier/ccAFv2_py:/files' cplaisier/ccafv2_py
+
 ##########################################
 ## Load Python packages for classifiers ##
 ##########################################
@@ -35,7 +37,7 @@ import ccAFv2
 PCW8 = sc.read_h5ad('../data/W8-1_normalized_ensembl.h5ad')
 
 # Run ccAFv2 to predict cell labels
-PCW8_labels = ccAFv2.predict_labels(PCW8, species='human', gene_id='ensembl')
+PCW8_labels = ccAFv2.predict_labels(PCW8, threshold=0.9, species='human', gene_id='ensembl')
 
 # Save into scanpy object
 PCW8.obs['ccAFv2'] = pd.Categorical(PCW8_labels[0], categories=['qG0', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)

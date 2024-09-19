@@ -110,12 +110,12 @@ There are several options that can be passed to the PredictCellCycle function:
 
 ```python
 ccAFv2.predict_labels(scanpy_obj,
-                      cutoff=0.5,
+                      threshold=0.5,
                       species='human',
                       gene_id='ensembl')
 ```
 - **scanpy_obj**: a scanpy object must be supplied to classify, no default
-- **cutoff**: the value used to threshold the likelihoods, default is 0.5
+- **threshold**: the value used to threshold the likelihoods, default is 0.5
 - **species**: from which species did the samples originate, either 'human' or 'mouse', defaults to 'human'
 - **gene_id**: what type of gene ID is used, either 'ensembl' or 'symbol', defaults to 'ensembl'
 
