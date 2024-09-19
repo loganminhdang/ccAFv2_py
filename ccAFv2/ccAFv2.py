@@ -117,7 +117,7 @@ def _prep_predict_data(data, genes):
         raise RuntimeError('Check species and gene_id, because there is no overlap between input genes and classifier genes!')
 
 # Predict labels with rejection
-def predict_labels(new_data, species='human', gene_id='ensembl', cutoff=0.5, classifier=_classifier, genes_all=_genes_all, classes=_classes):
+def predict_labels(new_data, species='human', gene_id='ensembl', threshold=0.5, classifier=_classifier, genes_all=_genes_all, classes=_classes):
     """
     predict_new_data takes in a pandas dataframe and the trained ccAFv2 model.
 
@@ -129,8 +129,8 @@ def predict_labels(new_data, species='human', gene_id='ensembl', cutoff=0.5, cla
          Species of the cells to be classified, currently supports 'human' and 'mouse'.
     gene_id: string
          Gene IDs for the scRNA-seq dataset, currently supports 'ensembl' and 'symbol'.
-    cutoff : float
-        The cutoff for likelihoods from the neural network classifier model.
+    threshold : float
+        The threshold for likelihoods from the neural network classifier model.
 
     Returns
     -------
@@ -144,7 +144,7 @@ def predict_labels(new_data, species='human', gene_id='ensembl', cutoff=0.5, cla
     probabilities = _predict_new_data(pred_data, classifier)
     print('  Choosing cell cycle state...')
     labels = np.array([classes[np.argmax(i)] for i in probabilities])
-    labels[np.where([np.max(i) < cutoff for i in probabilities])] = 'Unknown'
+    labels[np.where([np.max(i) < threshold for i in probabilities])] = 'Unknown'
     print('Done.')
     return labels, probabilities
 
