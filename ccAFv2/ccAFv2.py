@@ -117,7 +117,7 @@ def _prep_predict_data(data, genes):
         raise RuntimeError('Check species and gene_id, because there is no overlap between input genes and classifier genes!')
 
 # Predict labels with rejection
-def predict_labels(new_data, species='human', gene_id='ensembl', threshold=0.5, classifier=_classifier, genes_all=_genes_all, classes=_classes):
+def predict_labels(new_data, species='human', gene_id='ensembl', threshold=0.5, include_g0=False, classifier=_classifier, genes_all=_genes_all, classes=_classes):
     """
     predict_new_data takes in a pandas dataframe and the trained ccAFv2 model.
 
@@ -131,6 +131,8 @@ def predict_labels(new_data, species='human', gene_id='ensembl', threshold=0.5, 
          Gene IDs for the scRNA-seq dataset, currently supports 'ensembl' and 'symbol'.
     threshold : float
         The threshold for likelihoods from the neural network classifier model.
+    include_g0 : bool
+        Whether or not to provide G0, G1, and Late G1 or to collapse them into a G0/G1 state. Best practice is to set to True if not applying to neuroepithelial derived cells.
 
     Returns
     -------
@@ -145,6 +147,10 @@ def predict_labels(new_data, species='human', gene_id='ensembl', threshold=0.5, 
     print('  Choosing cell cycle state...')
     labels = np.array([classes[np.argmax(i)] for i in probabilities])
     labels[np.where([np.max(i) < threshold for i in probabilities])] = 'Unknown'
+    if not include_g0:
+        labels[np.where(labels=='Neural G0')] = 'G0/G1'
+        labels[np.where(labels=='G1')] = 'G0/G1'
+        labels[np.where(labels=='Late G1')] = 'G0/G1'
     print('Done.')
     return labels, probabilities
 

@@ -40,7 +40,7 @@ PCW8 = sc.read_h5ad('../data/W8-1_normalized_ensembl.h5ad')
 PCW8_labels = ccAFv2.predict_labels(PCW8, threshold=0.9, species='human', gene_id='ensembl')
 
 # Save into scanpy object
-PCW8.obs['ccAFv2'] = pd.Categorical(PCW8_labels[0], categories=['qG0', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
+PCW8.obs['ccAFv2'] = pd.Categorical(PCW8_labels[0], categories=['Neural G0', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
 
 # Run UMAP of U5 hNSCs
 sc.pp.highly_variable_genes(PCW8, n_top_genes=2000)
