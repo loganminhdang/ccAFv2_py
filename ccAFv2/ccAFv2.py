@@ -151,6 +151,9 @@ def predict_labels(new_data, species='human', gene_id='ensembl', threshold=0.5, 
         labels[np.where(labels=='Neural G0')] = 'G0/G1'
         labels[np.where(labels=='G1')] = 'G0/G1'
         labels[np.where(labels=='Late G1')] = 'G0/G1'
+        labels = pd.Categorical(labels, categories=['G0/G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
+    else:
+        labels = pd.Categorical(labels, categories=['Neural G0', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
     print('Done.')
     return labels, probabilities
 
