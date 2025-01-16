@@ -130,7 +130,7 @@ PCW8_labels
 Which returns the following:
 
 ```python
-(array(['G1', 'S', 'qG0', ..., 'Late G1', 'qG0', 'S'],
+(array(['G1', 'S', '', ..., 'Late G1', 'Neural G0', 'S'],
       dtype='<U10'), array([[9.96540964e-01, 2.77950567e-05, 1.62392517e-03, ...,
         1.12998277e-04, 1.34928769e-03, 3.37415549e-04],
        [2.38446728e-03, 9.58865421e-05, 4.40378720e-03, ...,
@@ -150,7 +150,7 @@ In the code Below we demonstrate how the classifications can be added to the met
 
 ```python
 # Save into scanpy object
-PCW8.obs['ccAFv2'] = pd.Categorical(PCW8_labels[0], categories=['qG0', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
+PCW8.obs['ccAFv2'] = pd.Categorical(PCW8_labels[0], categories=['', 'G1', 'Late G1', 'S', 'S/G2', 'G2/M', 'M/Early G1', 'Unknown'], ordered=True)
 ```
 
 ### Plotting cell cycle states
@@ -169,7 +169,7 @@ sc.pp.neighbors(PCW8)
 sc.tl.umap(PCW8)
 
 # Prepare a color mapping dictionary
-cmap1 = {"qG0": "#d9a428", "G1": "#f37f73", "Late G1": "#1fb1a9",  "S": "#8571b2", "S/G2": "#db7092", "G2/M": "#3db270" ,"M/Early G1": "#6d90ca",  "Unknown": "#d3d3d3"}
+cmap1 = {"": "#d9a428", "G1": "#f37f73", "Late G1": "#1fb1a9",  "S": "#8571b2", "S/G2": "#db7092", "G2/M": "#3db270" ,"M/Early G1": "#6d90ca",  "Unknown": "#d3d3d3"}
 
 # Plot UMAP of U5 hNSCs
 sc.pl.umap(PCW8, color=['ccAFv2'], palette=cmap1, save='ccAFv2_UMAP_PCW8.pdf')
