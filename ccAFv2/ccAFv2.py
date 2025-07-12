@@ -10,7 +10,7 @@
 ##   Arizona State University                           ##
 ##   242 ISTB1, 550 E Orange St                         ##
 ##   Tempe, AZ  85281                                   ##
-## @Author:  Chris Plaisier, Samantha O'Connor          ##
+## @Author:  Chris Plaisier, Samantha O'Connor         ##
 ## @License:  GNU GPLv3                                 ##
 ##                                                      ##
 ## If this program is used in your analysis please      ##
@@ -47,7 +47,7 @@ from tensorflow import keras
 ################
 with path('ccAFv2', 'ccAFv2_model.h5') as inPath:
     _classifier = keras.models.load_model(inPath)
-with path('ccAFv2', 'ccAFv2_genes.csv') as inPath:
+with path('ccAFv2', 'ccAFv2_genes_zebrafish.csv') as inPath:
     _genes_all = pd.read_csv(inPath, index_col=0, header=0)
 with path('ccAFv2', 'ccAFv2_classes.txt') as inPath:
     _classes = list(pd.read_csv(inPath, header=None)[0])
@@ -124,11 +124,11 @@ def predict_labels(new_data, species='human', gene_id='ensembl', threshold=0.5, 
     Parameters
     ----------
     new_data : annData object
-         New scRNA-seq dataset to be classified.
+        New scRNA-seq dataset to be classified.
     species: string
-         Species of the cells to be classified, currently supports 'human' and 'mouse'.
+        Species of the cells to be classified, currently supports 'human', 'mouse', and 'zebrafish'.
     gene_id: string
-         Gene IDs for the scRNA-seq dataset, currently supports 'ensembl' and 'symbol'.
+        Gene IDs for the scRNA-seq dataset, currently supports 'ensembl' and 'symbol'.
     threshold : float
         The threshold for likelihoods from the neural network classifier model.
     include_g0 : bool
@@ -144,7 +144,7 @@ def predict_labels(new_data, species='human', gene_id='ensembl', threshold=0.5, 
     genes = genes_all[species+'_'+gene_id]
     pred_data = _prep_predict_data(new_data, genes)
     probabilities = _predict_new_data(pred_data, classifier)
-    print('  Choosing cell cycle state...')
+    print('    Choosing cell cycle state...')
     labels = np.array([classes[np.argmax(i)] for i in probabilities])
     labels[np.where([np.max(i) < threshold for i in probabilities])] = 'Unknown'
     if not include_g0:
@@ -175,6 +175,5 @@ def _predict_new_data(new_data, classifier):
         Series of labels for each single cell.
 
     """
-    print('  Predicting cell cycle state probabilities...')
+    print('    Predicting cell cycle state probabilities...')
     return classifier.predict(new_data)
-
